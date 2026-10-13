@@ -1,0 +1,56 @@
+name: web-build
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.7'
+          channel: stable
+
+      - name: Descargar fuente
+        run: |
+          set -e
+          curl -s -H "Authorization: Bearer ${{ secrets.SF_PAT }}" \
+               -H "Accept: application/vnd.github.raw" \
+               "https://api.github.com/repos/Momentumsystems1/cluster/contents/sf-src.tar.gz?ref=main" \
+               -o sf-src.tar.gz
+          tar tzf sf-src.tar.gz | head -3
+          mkdir -p app
+          tar xzf sf-src.tar.gz -C app
+
+      - name: Pub get
+        run: cd app && flutter pub get
+
+      - name: Build web
+        run: |
+          cd app
+          flutter build web --release --base-href=/sentinelfamily-web/ \
+            --dart-define=SUPABASE_URL=https://nvannetdrfybowwjqqhf.supabase.co \
+            --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52YW5uZXRkcmZ5Ym93d2pxcWhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjg2OTAsImV4cCI6MjEwNDYwNDY5MH0.O1YFOBJskLYQAPHuWSktDg6wkguXjdWZqkgZ3CH_hdY \
+            --dart-define=INVITE_BASE_URL=https://momentumsystems1.github.io/sentinelfamily-join
+          ls -lh build/web
+
+      - name: Publicar en GitHub Pages
+        run: |
+          set -e
+          cd app/build/web
+          git config --global user.name K300
+          git config --global user.email k300@momentum.local
+          git init -q
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main
+          git reset -q origin/main
+          git add -A
+          git commit -qm "web build $(date -u +%FT%TZ)" || true
+          git pull --rebase origin main && git push origin HEAD:main
