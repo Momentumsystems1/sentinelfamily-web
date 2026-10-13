@@ -27,6 +27,8 @@ jobs:
                -o sf-src.tar.gz
           tar tzf sf-src.tar.gz > /dev/null
           mkdir -p app
+          ls -l sf-src.tar.gz
+          sha256sum sf-src.tar.gz
           tar xzf sf-src.tar.gz -C app
 
       - name: Pub get
