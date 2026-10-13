@@ -25,12 +25,15 @@ jobs:
                -H "Accept: application/vnd.github.raw" \
                "https://api.github.com/repos/Momentumsystems1/cluster/contents/sf-src.tar.gz?ref=main" \
                -o sf-src.tar.gz
-          tar tzf sf-src.tar.gz | head -3
+          tar tzf sf-src.tar.gz > /dev/null
           mkdir -p app
           tar xzf sf-src.tar.gz -C app
 
       - name: Pub get
         run: cd app && flutter pub get
+
+      - name: Configurar plataforma web
+        run: cd app && flutter create . --platforms web --org com.example --project-name sentinelfamily
 
       - name: Build web
         run: |
