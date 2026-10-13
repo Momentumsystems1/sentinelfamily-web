@@ -44,7 +44,7 @@ jobs:
             --dart-define=SUPABASE_URL=https://nvannetdrfybowwjqqhf.supabase.co \
             --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52YW5uZXRkcmZ5Ym93d2pxcWhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjg2OTAsImV4cCI6MjEwNDYwNDY5MH0.O1YFOBJskLYQAPHuWSktDg6wkguXjdWZqkgZ3CH_hdY \
             --dart-define=INVITE_BASE_URL=https://momentumsystems1.github.io/sentinelfamily-join \
-            --dart-define=TOMTOM_KEY=${{ secrets.TOMTOM_KEY }} \
+            --dart-define=TOMTOM_KEY=probe \
             --dart-define=GOOGLE_MAPS_KEY=${{ secrets.GOOGLE_MAPS_KEY }}
           ls -lh build/web
 
