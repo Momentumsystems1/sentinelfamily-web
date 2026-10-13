@@ -53,6 +53,12 @@ abstract class SentinelMapRenderer extends StatefulWidget {
   /// Called when the user manually scrolls/pans the map.
   final OnMapScrollCallback onMapScroll;
 
+  /// Clave TomTom (--dart-define=TOMTOM_KEY). Vacía = capa de tráfico desactivada.
+  static const String tomTomKey = String.fromEnvironment('TOMTOM_KEY', defaultValue: '');
+
+  /// Interruptor global de la capa de tráfico TomTom.
+  static final ValueNotifier<bool> trafficLayerEnabled = ValueNotifier<bool>(false);
+
   const SentinelMapRenderer({
     super.key,
     required this.initialLng,

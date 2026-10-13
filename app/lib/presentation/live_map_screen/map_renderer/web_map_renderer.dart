@@ -72,12 +72,14 @@ class WebMapRendererState
     super.initState();
     _zoom = widget.initialZoom.clamp(1.0, 20.0);
     _mapController = MapController();
+    SentinelMapRenderer.trafficLayerEnabled.addListener(_onTrafficToggled);
   }
 
   @override
   void dispose() {
     _mapController.dispose();
     super.dispose();
+    SentinelMapRenderer.trafficLayerEnabled.removeListener(_onTrafficToggled);
   }
 
   @override
@@ -167,6 +169,10 @@ class WebMapRendererState
   }
 
   @override
+  void _onTrafficToggled() {
+    if (mounted) setState(() {});
+  }
+
   Widget build(BuildContext context) {
     return FlutterMap(
       key: _mapKey,
@@ -200,6 +206,14 @@ class WebMapRendererState
           userAgentPackageName: 'com.sentinel.app',
           maxZoom: 20,
         ),
+        if (SentinelMapRenderer.trafficLayerEnabled.value &&
+            SentinelMapRenderer.tomTomKey.isNotEmpty)
+          TileLayer(
+            urlTemplate:
+                'https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=${SentinelMapRenderer.tomTomKey}',
+            userAgentPackageName: 'com.sentinel.app',
+            maxZoom: 22,
+          ),
       ],
     );
   }

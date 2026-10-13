@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/supabase_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/empty_state_widget.dart';
+import './widgets/air_quality_widget.dart';
 import './widgets/alert_card_widget.dart';
 import './widgets/alert_summary_bar_widget.dart';
 import './widgets/alerts_chart_widget.dart';
@@ -255,6 +256,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
                     checkinCount: _countByType('checkin'),
                     activeCount: _countActive(),
                   ),
+                  const AirQualityWidget(),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                     child: SingleChildScrollView(

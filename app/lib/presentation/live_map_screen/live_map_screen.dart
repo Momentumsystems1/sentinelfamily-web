@@ -418,6 +418,21 @@ class _LiveMapScreenState extends State<LiveMapScreen>
     );
   }
 
+  /// Activa/desactiva la capa de tráfico TomTom. Sin clave, avisa y no rompe.
+  void _toggleTraffic() {
+    if (SentinelMapRenderer.tomTomKey.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Capa de tráfico: falta la clave TomTom (TOMTOM_KEY)'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+    SentinelMapRenderer.trafficLayerEnabled.value =
+        !SentinelMapRenderer.trafficLayerEnabled.value;
+  }
+
   void _zoomOut() {
     final renderer = _rendererKey.currentState;
     if (renderer == null) return;
@@ -1034,6 +1049,15 @@ class _LiveMapScreenState extends State<LiveMapScreen>
                     onTap: _fitAllMembers,
                   ),
                 ],
+                const SizedBox(height: 4),
+                ValueListenableBuilder<bool>(
+                  valueListenable: SentinelMapRenderer.trafficLayerEnabled,
+                  builder: (context, enabled, _) => _MapControlButton(
+                    icon: Icons.traffic_rounded,
+                    onTap: _toggleTraffic,
+                    color: enabled ? AppTheme.primary : null,
+                  ),
+                ),
               ],
             ),
           ),
